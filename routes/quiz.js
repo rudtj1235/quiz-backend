@@ -47,7 +47,7 @@ router.post('/submit', async (req, res) => {
     const prevTotal = (user?.averageScore || 0) * (attempts - 1);
     const averageScore = (prevTotal + score) / attempts;
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
-    await User.findByIdAndUpdate(userId, { score, time: totalTime, attempts, averageScore, ip, operation: operation || 'addition' });
+    await User.findByIdAndUpdate(userId, { score, time: totalTime, attempts, averageScore, ip, operation: operation || 'addition', totalCorrect });
     res.json({ message: '제출 완료', totalCorrect, score: score.toFixed(1) });
   } catch (err) {
     res.status(500).json({ message: '서버 오류', error: err });
