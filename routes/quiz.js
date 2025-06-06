@@ -7,13 +7,23 @@ const User = require('../models/User');
 router.get('/generate', (req, res) => {
   const operation = req.query.operation || 'addition';
   const questions = Array.from({ length: 5 }).map(() => {
-    const left = Math.floor(Math.random() * 9) + 1;
-    const right = Math.floor(Math.random() * 9) + 1;
-    return {
-      left,
-      right,
-      answer: operation === 'multiplication' ? left * right : left + right
-    };
+    if (operation === 'multiplication') {
+      const left = Math.floor(Math.random() * 90) + 10; // 10~99
+      const right = Math.floor(Math.random() * 9) + 1; // 1~9
+      return {
+        left,
+        right,
+        answer: left * right
+      };
+    } else {
+      const left = Math.floor(Math.random() * 9) + 1;
+      const right = Math.floor(Math.random() * 9) + 1;
+      return {
+        left,
+        right,
+        answer: left + right
+      };
+    }
   });
   res.json({ questions });
 });
