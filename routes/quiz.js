@@ -1,0 +1,45 @@
+const express = require('express');
+const router = express.Router();
+const QuizResult = require('../models/QuizResult');
+const User = require('../models/User');
+
+// 1자리 수 + 1자리 수 랜덤 문제 5개 출제
+router.get('/generate', (req, res) => {
+  const questions = Array.from({ length: 5 }).map(() => {
+    const left = Math.floor(Math.random() * 9) + 1;
+    const right = Math.floor(Math.random() * 9) + 1;
+    return {
+      left,
+      right,
+      answer: left + right
+    };
+  });
+  res.json({ questions });
+});
+
+// 정답 제출 및 결과 저장
+router.post('/submit', async (req, res) => {
+  const { userId, questions, totalTime } = req.body;
+  if (!userId || !questions || !Array.isArray(questions)) {
+    return res.status(400).json({ message: '필수 데이터 누락' });
+  }
+  try {
+    const totalCorrect = questions.filter(q => q.answer === q.userAnswer).length;
+    const quizResult = new QuizResult({ userId, questions, totalCorrect, totalTime });
+    await quizResult.save();
+    // 점수 산출: 정답 개수 * 20 - (소요시간(초))
+    const score = totalCorrect * 20 - Math.floor(totalTime / 1000);
+    // 사용자 정보 업데이트: 도전 횟수, 평균 점수, IP
+    const user = await User.findById(userId);
+    const attempts = (user?.attempts || 0) + 1;
+    const prevTotal = (user?.averageScore || 0) * (attempts - 1);
+    const averageScore = (prevTotal + score) / attempts;
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
+    await User.findByIdAndUpdate(userId, { score, time: totalTime, attempts, averageScore, ip });
+    res.json({ message: '제출 완료', totalCorrect, score });
+  } catch (err) {
+    res.status(500).json({ message: '서버 오류', error: err });
+  }
+});
+
+module.exports = router;
