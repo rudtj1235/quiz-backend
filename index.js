@@ -35,9 +35,11 @@ mongoose.connect(process.env.MONGO_URI, {
 const userRouter = require('./routes/user');
 const quizRouter = require('./routes/quiz');
 const rankingRouter = require('./routes/ranking');
+const schoolRouter = require('./routes/school');
 app.use('/api/user', userRouter);
 app.use('/api/quiz', quizRouter);
 app.use('/api/ranking', rankingRouter);
+app.use('/api/school', schoolRouter);
 
 app.get('/', (req, res) => {
   res.send('실시간 수학퀴즈 랭킹 백엔드 동작 중');
