@@ -27,8 +27,9 @@ function filterBestAndCurrent(users, userId) {
 // 전체 랭킹 조회
 router.get('/all', async (req, res) => {
   const userId = req.query.userId;
+  const operation = req.query.operation || 'addition';
   try {
-    const users = await User.find().sort({ score: -1, time: 1 });
+    const users = await User.find({ operation }).sort({ score: -1, time: 1 });
     const filtered = filterBestAndCurrent(users, userId);
     res.json({ users: filtered });
   } catch (err) {
@@ -38,10 +39,10 @@ router.get('/all', async (req, res) => {
 
 // 학교별 랭킹 조회
 router.get('/school', async (req, res) => {
-  const { school, userId } = req.query;
+  const { school, userId, operation } = req.query;
   if (!school) return res.status(400).json({ message: '학교명 필요' });
   try {
-    const users = await User.find({ school }).sort({ score: -1, time: 1 });
+    const users = await User.find({ school, operation: operation || 'addition' }).sort({ score: -1, time: 1 });
     const filtered = filterBestAndCurrent(users, userId);
     res.json({ users: filtered });
   } catch (err) {

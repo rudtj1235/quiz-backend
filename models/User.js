@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   ip: { type: String },
   averageScore: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
+  operation: { type: String, default: 'addition' },
 }, {
   indexes: [
     { fields: { school: 1, nickname: 1 }, options: { unique: true } }

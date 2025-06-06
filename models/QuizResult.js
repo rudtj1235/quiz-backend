@@ -14,6 +14,7 @@ const quizResultSchema = new mongoose.Schema({
   totalCorrect: { type: Number, default: 0 },
   totalTime: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
+  operation: { type: String, default: 'addition' },
 });
 
 module.exports = mongoose.model('QuizResult', quizResultSchema); 
