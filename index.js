@@ -9,12 +9,19 @@ const PORT = process.env.PORT || 5000;
 // 실제 배포된 프론트엔드 주소로 수정하세요!
 const allowedOrigins = [
   'https://quiz-frontend-snowy-mu.vercel.app',
+  'https://quiz-frontend-2wdx1wgu4-park-kyungseos-projects.vercel.app',
   'http://localhost:3000'
 ];
 
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
 }));
 app.use(express.json());
 
