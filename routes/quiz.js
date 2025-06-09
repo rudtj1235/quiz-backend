@@ -16,13 +16,24 @@ router.get('/generate', (req, res) => {
         answer: left * right
       };
     } else {
-      const left = Math.floor(Math.random() * 9) + 1;
-      const right = Math.floor(Math.random() * 9) + 1;
-      return {
-        left,
-        right,
-        answer: left + right
-      };
+      // 덧셈: (1) 101~999 + 11~99 또는 (2) 11~99 + 101~999
+      if (Math.random() < 0.5) {
+        const left = Math.floor(Math.random() * 899) + 101; // 101~999
+        const right = Math.floor(Math.random() * 89) + 11;  // 11~99
+        return {
+          left,
+          right,
+          answer: left + right
+        };
+      } else {
+        const left = Math.floor(Math.random() * 89) + 11;   // 11~99
+        const right = Math.floor(Math.random() * 899) + 101; // 101~999
+        return {
+          left,
+          right,
+          answer: left + right
+        };
+      }
     }
   });
   res.json({ questions });
