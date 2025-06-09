@@ -9,7 +9,7 @@ router.get('/generate', (req, res) => {
   const questions = Array.from({ length: 5 }).map(() => {
     if (operation === 'multiplication') {
       const left = Math.floor(Math.random() * 90) + 10; // 10~99
-      const right = Math.floor(Math.random() * 9) + 1; // 1~9
+      const right = Math.floor(Math.random() * 8) + 2; // 2~9
       return {
         left,
         right,
